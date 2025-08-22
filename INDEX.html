@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Form Input Data Pengusulan</title>
+<style>
+body {font-family: Arial, sans-serif; background: #f5f7fa; padding: 20px;}
+.container {max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+h1 {margin-top: 0; text-align: center;}
+label {font-weight: bold; margin-top: 10px; display: block;}
+input, select {width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ccc; border-radius: 8px;}
+button {margin-top: 15px; padding: 12px 20px; border: none; border-radius: 8px; background: #2563eb; color: #fff; font-weight: bold; cursor: pointer;}
+button:hover {background: #1d4ed8;}
+.status {margin-top: 12px; font-size: 14px;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Form Input Data Pengusulan</h1>
+<form id="pengusulanForm">
+<label for="nip">NIP (18 Digit)</label>
+<input id="nip" name="nip" type="text" required pattern="^\d{18}$" placeholder="198705112022031001">
+
+
+<label for="nama">Nama Lengkap</label>
+<input id="nama" name="nama" type="text" required placeholder="Siti Rahmawati">
+
+
+<label for="hp">No HP</label>
+<input id="hp" name="hp" type="tel" required placeholder="081234567890" pattern="^(\+62|0)\d{9,13}$">
+
+
+<label for="drive">Link Google Drive</label>
+<input id="drive" name="drive" type="url" required placeholder="https://drive.google.com/...">
+
+
+<label for="jenis">Jenis Pengusulan</label>
+<select id="jenis" name="jenis" required>
+<option value="" disabled selected>Pilih jenis pengusulan…</option>
+<option value="pensiun">Pensiun</option>
+<option value="berkala">Berkala</option>
+<option value="cuti">Cuti</option>
+</select>
+
+
+<button type="submit">Kirim</button>
+<div id="status" class="status"></div>
+</form>
+</div>
+
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbyVVcUIpfzx8qaW5s86G0fvIaE3aBhnDoUhRwweAkWQ8oZYtzFhpGZ2mEEuCPEFXkum_Q/exec"; // Ganti dengan URL Web App Apps Script Anda
+const form = document.getElementById("pengusulanForm");
+const statusEl = document.getElementById("status");
+
+
+form.addEventListener("submit", e => {
+e.preventDefault();
+statusEl.textContent = "Mengirim data...";
+fetch(scriptURL, { method: "POST", body: new FormData(form) })
+.then(response => {
+if (response.ok) {
+statusEl.textContent = "✅ Data berhasil dikirim ke Google Sheets.";
+form.reset();
+} else {
+statusEl.textContent = "❌ Gagal mengirim data.";
+}
+})
+.catch(error => {
+console.error(error);
+statusEl.textContent = "⚠️ Terjadi kesalahan jaringan.";
+});
+});
+</script>
+</body>
+</html>
